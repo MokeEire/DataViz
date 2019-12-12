@@ -52,6 +52,8 @@ snap_ads_region = snap_ads %>%
          CandidateBallotInformation = str_squish(CandidateBallotInformation)) %>% 
   left_join(fxData_DF, by = c("StartDate" = "date", "Currency Code" = "currency")) %>% 
   arrange(`Currency Code`, StartDate) %>% 
+  # getFX() can only get past 180 days of exchange rates
+  # For dates prior, use oldest exchange rate (imperfect)
   fill(conversion_factor, .direction = "up") %>% 
   mutate(Spend_usd = Spend*conversion_factor,
          CountryCode = str_to_title(CountryCode))
